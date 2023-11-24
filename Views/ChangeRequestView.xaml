@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="PIPlanner.Views.ChangeRequestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PIPlanner.Views"
+             xmlns:converters="clr-namespace:PIPlanner.Converters"
+             mc:Ignorable="d" MaxHeight="200"
+             d:DesignHeight="450" d:DesignWidth="800" 
+             FontSize="12"
+             MouseMove="UserControl_MouseMove" 
+             MouseEnter="_container_MouseEnter"
+             MouseLeave="_container_MouseLeave"
+             ToolTip="{Binding OneLiner, Mode=OneWay}" Name="_container">
+    <UserControl.Resources>
+        <converters:Bool2Visibility x:Key="Bool2Visibility" />
+        <converters:InverseBool2Visibility x:Key="InvBool2Visibility" />
+        <converters:CRFullModeVisibility x:Key="CRFullModeVisibility" />
+        <converters:FunctionalAreaColor x:Key="functionalAreaColor" />
+        <converters:FunctionalAreaMneumonic x:Key="functionalAreaMneumonic" />
+        <converters:DCRTextDecorationConverter x:Key="decorationConverter" />
+        <converters:ZeroVisibilityConverter x:Key="zeroVisibility" />
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Edit" Click="editItem_Click" />
+            <MenuItem Header="Unassign" Click="unassignMenuItem_Click" />
+            <Separator />
+            <MenuItem Header="Reject \ Approve" Click="rejectMenuItem_Click" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Border BorderBrush="{Binding FunctionalArea, Converter={StaticResource functionalAreaColor}}" BorderThickness="3">
+        <Grid Width="{Binding ElementName=_container, Path=ActualWidth}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <RadioButton Visibility="Collapsed" x:Name="_fullMode" />
+            <RadioButton Visibility="Collapsed" x:Name="_featureMode" />
+            <Image Grid.Row="0" Grid.Column="0" Source="../images/feature.png" Height="15" HorizontalAlignment="Left" Margin="2"
+                       Visibility="{Binding IsFeature, Converter={StaticResource Bool2Visibility}}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Id}" FontWeight="Bold" 
+                   VerticalAlignment="Center" Margin="5 0 0 0"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"/>
+
+            <Ellipse Grid.Row="1" Grid.Column="0" Height="10" Width="10" Fill="{Binding StatusColor}" 
+                 Margin="2" ToolTip="{Binding StatusTooltip}" 
+                 Visibility="{Binding ElementName=_fullMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="2" Margin="0 0 10 0" HorizontalAlignment="Right">
+            <Run Text="SPs" FontStyle="Italic"/>
+            <Run Text="{Binding SPs}" FontStyle="Italic" FontWeight="Bold" />
+            </TextBlock>
+            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Background="Yellow" Margin="5 0 10 0"                        
+                    Visibility="{Binding ElementName=_featureMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}">
+                <TextBlock Visibility="{Binding Sprint.Id, Converter={StaticResource zeroVisibility}}" Foreground="Brown">
+                <Run Text="Sprint" FontStyle="Italic" />
+                <Run Text="{Binding SprintId}" FontWeight="Bold" />
+                <Run Text=" " Foreground="Gray"/>
+                </TextBlock>
+                <TextBlock Text="{Binding TeamName}" FontWeight="Bold" Foreground="Brown"
+                       Visibility="{Binding TeamId, Converter={StaticResource zeroVisibility}}" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Summary}" FontStyle="Italic" 
+                   TextWrapping="WrapWithOverflow" Margin="12 0 10 0"
+                   Visibility="{Binding ElementName=_fullMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}"
+                   Width="{Binding ElementName=_container, Path=ActualWidth}"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Summary}" FontStyle="Italic" 
+                   TextWrapping="WrapWithOverflow" Margin="12 0 10 0"
+                   Visibility="{Binding ElementName=_featureMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}"
+                   Width="{Binding ElementName=_container, Path=ActualWidth}"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"/>
+
+            <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FunctionalArea, Converter={StaticResource functionalAreaMneumonic}}" 
+                   Visibility="{Binding ElementName=_featureMode, Path=IsChecked, Converter={StaticResource InvBool2Visibility}}"
+                   FontWeight="Bold" FontFamily="Courier New" HorizontalAlignment="Left"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"
+                   Background="{Binding FunctionalArea, Converter={StaticResource functionalAreaColor}}"/>-->
+
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FunctionalArea}" 
+                   Visibility="{Binding ElementName=_featureMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}"
+                   FontWeight="Bold" FontFamily="Courier New" HorizontalAlignment="Left"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"
+                   Background="{Binding FunctionalArea, Converter={StaticResource functionalAreaColor}}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FunctionalArea}" 
+                   Visibility="{Binding ElementName=_fullMode, Path=IsChecked, Converter={StaticResource Bool2Visibility}}"
+                   FontWeight="Bold" FontFamily="Courier New" HorizontalAlignment="Left"
+                   TextDecorations="{Binding Status, Converter={StaticResource decorationConverter}}"
+                   Background="{Binding FunctionalArea, Converter={StaticResource functionalAreaColor}}"/>
+        </Grid>
+    </Border>
+</UserControl>

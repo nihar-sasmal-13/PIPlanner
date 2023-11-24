@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="images\add.png" />
+    <None Remove="images\addremoveitems.jpg" />
+    <None Remove="images\ai.png" />
+    <None Remove="images\comment.png" />
+    <None Remove="images\content.png" />
+    <None Remove="images\csv.png" />
+    <None Remove="images\dcr.png" />
+    <None Remove="images\dependencies.png" />
+    <None Remove="images\download.jpg" />
+    <None Remove="images\edit.png" />
+    <None Remove="images\epics.jpg" />
+    <None Remove="images\eraser.png" />
+    <None Remove="images\feature.png" />
+    <None Remove="images\featurecr.png" />
+    <None Remove="images\fit.png" />
+    <None Remove="images\gitbranch.png" />
+    <None Remove="images\import.png" />
+    <None Remove="images\info.png" />
+    <None Remove="images\matrix.gif" />
+    <None Remove="images\new.png" />
+    <None Remove="images\open.png" />
+    <None Remove="images\planning.ico" />
+    <None Remove="images\planning.png" />
+    <None Remove="images\pop.png" />
+    <None Remove="images\print.png" />
+    <None Remove="images\refresh.png" />
+    <None Remove="images\release.png" />
+    <None Remove="images\save.png" />
+    <None Remove="images\sprint.jpg" />
+    <None Remove="images\sprint.png" />
+    <None Remove="images\statistics.png" />
+    <None Remove="images\team.png" />
+    <None Remove="images\updown.png" />
+    <None Remove="images\upload.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="GraphViz4Net" Version="3.0.2" />
+    <PackageReference Include="GraphViz4Net.WPF2" Version="3.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\add.png" />
+    <Resource Include="images\addremoveitems.jpg" />
+    <Resource Include="images\ai.png" />
+    <Resource Include="images\comment.png" />
+    <Resource Include="images\content.png" />
+    <Resource Include="images\csv.png" />
+    <Resource Include="images\dcr.png" />
+    <Resource Include="images\dependencies.png" />
+    <Resource Include="images\download.jpg" />
+    <Resource Include="images\edit.png" />
+    <Resource Include="images\epics.jpg" />
+    <Resource Include="images\eraser.png" />
+    <Resource Include="images\feature.png" />
+    <Resource Include="images\featurecr.png" />
+    <Resource Include="images\fit.png" />
+    <Resource Include="images\gitbranch.png" />
+    <Resource Include="images\import.png" />
+    <Resource Include="images\info.png" />
+    <Resource Include="images\matrix.gif" />
+    <Resource Include="images\new.png" />
+    <Resource Include="images\open.png" />
+    <Resource Include="images\planning.ico" />
+    <Resource Include="images\planning.png" />
+    <Resource Include="images\pop.png" />
+    <Resource Include="images\print.png" />
+    <Resource Include="images\refresh.png" />
+    <Resource Include="images\release.png" />
+    <Resource Include="images\save.png" />
+    <Resource Include="images\sprint.jpg" />
+    <Resource Include="images\sprint.png" />
+    <Resource Include="images\statistics.png" />
+    <Resource Include="images\team.png" />
+    <Resource Include="images\updown.png" />
+    <Resource Include="images\upload.jpg" />
+  </ItemGroup>
+
+</Project>
