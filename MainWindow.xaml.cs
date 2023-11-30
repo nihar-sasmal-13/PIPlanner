@@ -212,9 +212,11 @@ namespace PIPlanner
             if (ViewModel?.Plan?.ChangeRequests == null)
                 return;
 
+            ViewModel.Plan.NotifyPlanChanged();
+
             foreach (var cr in ViewModel.Plan.ChangeRequests)
             {
-                if (cr.SprintId == 0 && cr.TeamId == 0)
+                if (cr.SprintId == null && cr.TeamId == null)
                     cr.BackgroundColor = Brushes.Transparent;
 
                 //if (cr.TeamId != 0)
@@ -248,8 +250,7 @@ namespace PIPlanner
                     var crs = ViewModel.Plan.ChangeRequests.Where(cr => cr.SprintId == null && cr.TeamId == sprintView.TeamId);
                     sprintView.EnsureItemValidity(crs, _showItemDetails.IsChecked.GetValueOrDefault());
                 }
-            }
-            ViewModel.Plan.UpdatePlanUnsavedStatus();
+            }            
         }
 
         private void fit2WindowButton_Click(object sender, RoutedEventArgs e)

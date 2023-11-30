@@ -88,7 +88,8 @@ namespace PIPlanner.Views
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            Plan.Save();            
+            Plan.Save();
+            Close();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

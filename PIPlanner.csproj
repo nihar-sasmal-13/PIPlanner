@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
+    <ApplicationIcon>images\planning.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +45,10 @@
     <None Remove="images\team.png" />
     <None Remove="images\updown.png" />
     <None Remove="images\upload.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="images\planning.ico" />
   </ItemGroup>
 
   <ItemGroup>

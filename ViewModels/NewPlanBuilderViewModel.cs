@@ -176,6 +176,8 @@ namespace PIPlanner.ViewModels
                         Id = sprint.Id * 100 + team.Id,
                         SprintId = sprint.Id,
                         TeamId = team.Id,
+                        PIAvailability = team.Velocity,
+                        SprintAvailability = team.Velocity,
                     });
                 }
             }

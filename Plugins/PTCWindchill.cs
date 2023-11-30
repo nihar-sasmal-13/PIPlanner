@@ -10,22 +10,28 @@ namespace PIPlanner.Plugins
 {
     internal class PTCWindchill : PluginBase
     {
+        private const string HOSTNAME = "Hostname";
+        private const string PORT = "Port";
+        private const string USERNAME = "Username";
+        private const string PASSWORD = "Password";
+        private const string RELEASES = "Release Ids (comma separated)";        
+
         public override void FetchData(List<KeyValue>? inputs, ContentToFetch fetch = ContentToFetch.Everything)
         {
             inputs = getInputsFromUser(new List<KeyValue> {
-                new KeyValue("Hostname", ""),
-                new KeyValue("Port", ""),
-                new KeyValue("Username", ""),
-                new KeyValue("Password", ""),
-                new KeyValue("Release Ids (comma separated)", "")
+                new KeyValue(HOSTNAME, ""),
+                new KeyValue(PORT, ""),
+                new KeyValue(USERNAME, ""),
+                new KeyValue(PASSWORD, ""),
+                new KeyValue(RELEASES, "")
                 });
 
-            string connection = $"--hostname={inputs.GetValue("Hostname")} " +
-                $"--port={inputs.GetValue("Port")} " +
-                $"--user={inputs.GetValue("Username")} " +
-                $"--password={inputs.GetValue("Password")}";
+            string connection = $"--hostname={inputs.GetValue(HOSTNAME)} " +
+                $"--port={inputs.GetValue(PORT)} " +
+                $"--user={inputs.GetValue(USERNAME)} " +
+                $"--password={inputs.GetValue(PASSWORD)}";
 
-            var releases = inputs.GetValue("Releases (comma separated)")
+            var releases = inputs.GetValue(RELEASES)
                 .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             var releaseFilters = releases.Select(r => $"(field[Planned Release]={r})");
 

@@ -64,7 +64,7 @@ namespace PIPlanner
             var messageBoxMessage = $"Please share the following report to developer :\n{Path.GetFullPath(fileName)}";
             // Let the user decide if the app should die or not (if applicable).
             MessageBox.Show(messageBoxMessage, messageBoxTitle, messageBoxButtons);
-            Application.Current.Shutdown();
+            Application.Current?.Shutdown();
         }
     }
 }

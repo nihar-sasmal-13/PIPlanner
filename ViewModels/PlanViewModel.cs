@@ -62,7 +62,7 @@ namespace PIPlanner.ViewModels
 
         public int TotalFeatureAllocated
         {
-            get => ChangeRequests.Where(cr => cr.SprintId == null && cr.TeamId != 0).Sum(cr => cr.SPs);
+            get => ChangeRequests.Where(cr => cr.SprintId == null && cr.TeamId != null).Sum(cr => cr.SPs);
         }        
 
         public bool HasUnsavedChanges

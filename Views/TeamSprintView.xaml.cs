@@ -196,7 +196,7 @@ namespace PIPlanner.Views
                     var cr = (_panel.Children[index] as ChangeRequestView)?.DataContext as ChangeRequest;
                     if (cr != null)
                     {
-                        cr.SprintId = cr.TeamId = 0;
+                        cr.SprintId = cr.TeamId = null;
                         cr.BackgroundColor = Brushes.Transparent;
                     }
                 }

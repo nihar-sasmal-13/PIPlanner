@@ -50,7 +50,7 @@ namespace PIPlanner.Views
         private void unassignMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var cr = DataContext as ChangeRequest;
-            cr.SprintId = cr.TeamId = 0;
+            cr.SprintId = cr.TeamId = null;
             cr.BackgroundColor = Brushes.Transparent;
             RefreshAction?.Invoke();
         }
@@ -65,7 +65,7 @@ namespace PIPlanner.Views
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     cr.Status = DCRStatus.Rejected;
-                    cr.SprintId = cr.TeamId = 0;
+                    cr.SprintId = cr.TeamId = null;
                     cr.BackgroundColor = Brushes.Transparent;
                 }
             }
