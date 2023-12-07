@@ -119,8 +119,8 @@ namespace PIPlanner.ViewModels
             NewPlanCommand = new Command(param => createOrEditPlan(), true);
             LoadCommand = new Command(async (param) => await loadAsync(param), true);
             SaveCommand = new Command(async (param) => await savePlanAsync(), true);
-            EditCommand = new Command(param => createOrEditPlan());
-            EditContentCommand = new Command(param => editPlanContent());
+            EditCommand = new Command(param => createOrEditPlan(), true);
+            EditContentCommand = new Command(param => editPlanContent(), true);
             ImportPlanCommand = new Command(param => importPlan());
             FilterChangedCommand = new Command((param) => filterChangedAsync(param), true);
             RefreshPlanCommand = new Command(async (param) => await refreshPlanAsync(param));

@@ -97,7 +97,7 @@
                     </TabControl>
                 </Grid>
             </GroupBox>
-            <Button Content="Save" HorizontalAlignment="Center" Padding="20 5" Margin="10" 
+            <Button Content="Save &amp; Close" HorizontalAlignment="Center" Padding="20 5" Margin="10" 
                 FontSize="18" Click="saveButton_Click"/>
         </StackPanel>
     </ScrollViewer>
