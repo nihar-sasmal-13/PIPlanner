@@ -9,7 +9,8 @@
         xmlns:views="clr-namespace:PIPlanner.Views"
         xmlns:vm="clr-namespace:PIPlanner.ViewModels"
         xmlns:model="clr-namespace:PIPlanner.DataModel"
-        xmlns:graph="clr-namespace:Graphviz4Net.WPF;assembly=Graphviz4Net.WPF"
+        xmlns:graph="clr-namespace:Graphviz4Net.WPF;assembly=Graphviz4Net.WPF"        
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Title="Program Increment Planner" Height="450" Width="800"
         Closing="Window_Closing">
@@ -79,9 +80,6 @@
                     <Image Source="images/save.png" Height="30" />
                 </Button.Content>
             </Button>
-            <!--<CheckBox Visibility="Collapsed" Name="_autoSave" Margin="2" ToolTip="Saves the plan automatically after every edit" IsEnabled="{Binding Plan, Converter={StaticResource null2bool}}"
-                  Content="Saving Automatically" IsChecked="True" Foreground="Blue" FontSize="14" VerticalContentAlignment="Center" 
-                  Checked="autoSaveCheckBox_Click" Unchecked="autoSaveCheckBox_Click"/>-->
             <!--<Separator />-->
             <Button Margin="2" ToolTip="Print \ Export Plan (Ctrl+P)" Command="{Binding Export2HTMLCommand}" IsEnabled="{Binding Plan, Converter={StaticResource null2bool}}">
                 <Button.Content>
@@ -237,25 +235,33 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Border Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" CornerRadius="35" BorderThickness="1"
-                    Margin="30" Background="CornflowerBlue" BorderBrush="Blue">
-                    <Button Padding="15 12" Background="Transparent" BorderThickness="0" Command="{Binding EditContentCommand}"
-                        Visibility="{Binding Plan, Converter={StaticResource null2Visibility}}" FontSize="16">
-                        <Button.Content>
-                            <TextBlock Foreground="Black" FontWeight="ExtraBold" >
+                <Button Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                        Width="60" Height="60" Margin="25"
+                        Command="{Binding EditContentCommand}"
+                        Visibility="{Binding Plan, Converter={StaticResource null2Visibility}}">
+                    <Button.Content>
+                        <TextBlock FontWeight="Bold" Padding="5">
                             <Run Text="Add" />
                             <LineBreak />
                             <Run Text="DCR" />
-                            </TextBlock>
-                        </Button.Content>
-                    </Button>
-                </Border>
+                        </TextBlock>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Ellipse Fill="SkyBlue" />
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
             </Grid>
             <GridSplitter Grid.Column="0" Width="4" Background="DarkGray" Margin="0 2" />
             <TabControl Name="_tabControl" Grid.Column="1">
                 <TabItem>
                     <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"  Margin="15 1">
                             <Image Source="images/epics.jpg" Height="25" />
                             <TextBlock Text="Features" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
                         </StackPanel>
@@ -266,7 +272,7 @@
                 </TabItem>
                 <TabItem>
                     <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"  Margin="15 1">
                             <Image Source="images/planning.png" Height="25" />
                             <TextBlock Text="Change Requests" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
                         </StackPanel>
@@ -275,206 +281,9 @@
                         <Grid Name="_piplanGrid" ShowGridLines="True" />
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Visibility="Collapsed">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="images/dependencies.png" Height="25" />
-                            <TextBlock Text="Dependencies" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Features (Functional Classification) :" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
-                            <ComboBox ItemsSource="{Binding Plan.Features}" DisplayMemberPath="FunctionalArea" MinWidth="450" Margin="2" 
-                                      SelectionChanged="_dependenciesComboBox_SelectionChanged"/>
-                        </StackPanel>
-                        <Rectangle Grid.Row="1" Height="2" Fill="LightGray" />
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="4*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0" Margin="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="Select an item to set its dependencies" TextWrapping="Wrap" Margin="5" FontWeight="Bold"/>
-                                <ComboBox Grid.Row="1" ItemsSource="{Binding FeatureDCRs}" Margin="5 0 5 5" SelectedItem="{Binding SelectedDCR}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock TextWrapping="Wrap">
-                                            <Run Text="{Binding ID}" />
-                                            <Run Text="{Binding Summary}" />
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <TextBlock Grid.Row="2" Text="Depends On" TextWrapping="Wrap" Margin="5" FontWeight="Bold"/>
-                                <ItemsControl Grid.Row="3" ItemsSource="{Binding SelectedDCR.DependsOn}" Margin="5 0 5 5" MinHeight="25" Background="GhostWhite">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <ItemContainerTemplate>
-                                            <StackPanel Orientation="Horizontal" Background="LightPink" Margin="2" HorizontalAlignment="Left">
-                                                <Button Content="x" Background="Transparent" Padding="4 0"
-                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveDependency}" CommandParameter="{Binding}"/>
-                                                <TextBlock Text="{Binding}" Padding="2" TextWrapping="Wrap" FontWeight="Bold"/>
-                                            </StackPanel>
-                                        </ItemContainerTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <Button Grid.Row="4" Content="Add External Dependency" Margin="5" Padding="5" />
-                                <ListView Grid.Row="5" ItemsSource="{Binding RelatedDCRs}" Margin="5 0 5 5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                                          ScrollViewer.VerticalScrollBarVisibility="Visible">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="4">
-                                                <CheckBox VerticalContentAlignment="Center" Checked="CheckBox_Checked">
-                                                    <CheckBox.Content>
-                                                        <TextBlock TextWrapping="Wrap">
-                                                            <Run Text="{Binding ID}" />
-                                                            <Run Text="{Binding Summary}" />
-                                                        </TextBlock>
-                                                    </CheckBox.Content>
-                                                </CheckBox>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Grid>
-                            <GridSplitter Grid.Column="0" Width="2" />
-                            <ScrollViewer Grid.Column="1" x:Name="_graphContainer" HorizontalScrollBarVisibility="Auto">
-                                <graph:GraphLayout x:Name="_dependencyGraph" Graph="{Binding DependencyGraph}">
-                                    <graph:GraphLayout.Resources>
-                                        <DataTemplate DataType="{x:Type vm:ExternalItemViewModel}">
-                                            <Border BorderBrush="Red" BorderThickness="1" Padding="0" CornerRadius="5">
-                                                <Grid MaxWidth="120" Margin="2">
-                                                    <StackPanel Orientation="Vertical">
-                                                        <TextBlock Foreground="Blue" VerticalAlignment="Center" FontSize="12" FontWeight="ExtraBold"
-                                                   Text="{Binding Team}" TextWrapping="Wrap"/>
-                                                        <TextBlock Foreground="Purple" VerticalAlignment="Center" FontSize="12" 
-                                                   Text="{Binding AvailabilityDate, StringFormat='dd-MMM-yyyy'}"/>
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                        <DataTemplate DataType="{x:Type model:ChangeRequest}">
-                                            <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5">
-                                                <Grid MaxWidth="120" Margin="2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                                                        <Ellipse Height="10" Width="10" Fill="{Binding StatusColor}" ToolTip="{Binding StatusTooltip}" />
-                                                        <TextBlock Foreground="Blue" VerticalAlignment="Center" FontSize="12" FontWeight="ExtraBold">
-                                                    <Run Text="S" Foreground="DarkGray"/>
-                                                    <Run Text="{Binding SprintId}" />
-                                                        </TextBlock>
-                                                        <TextBlock Foreground="Purple" VerticalAlignment="Center" FontSize="12" FontWeight="ExtraBold">
-                                                    <Run Text="T" Foreground="DarkGray"/>
-                                                    <Run Text="{Binding TeamId}" />
-                                                        </TextBlock>
-                                                    </StackPanel>
-                                                    <Rectangle Grid.Column="1" Fill="LightGray" Width="1" Margin="2" />
-
-                                                    <StackPanel Orientation="Vertical" Grid.Column="2">
-                                                        <TextBlock Text="{Binding ID}" FontSize="14" FontWeight="Bold" />
-                                                        <Rectangle Height="1" Fill="LightGray" />
-                                                        <TextBlock Text="{Binding FunctionalArea}" FontSize="10" FontStyle="Italic" TextWrapping="Wrap" TextDecorations="Underline"
-                                                   Visibility="{Binding ElementName=_showFA, Path=IsChecked, Converter={StaticResource bool2Visibility}}"/>
-                                                        <TextBlock Text="{Binding Summary}" FontSize="10" FontStyle="Oblique" TextWrapping="Wrap" 
-                                                   Visibility="{Binding ElementName=_showSummary, Path=IsChecked, Converter={StaticResource bool2Visibility}}" />
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </graph:GraphLayout.Resources>
-                                </graph:GraphLayout>
-                            </ScrollViewer>
-                        </Grid>
-                    </Grid>
-                </TabItem>
-                <TabItem Visibility="Collapsed">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="images/gitbranch.png" Height="25" />
-                            <TextBlock Text="Git Branches" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Features (Functional Classification) :" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
-                            <ComboBox ItemsSource="{Binding Plan.Features}" DisplayMemberPath="FunctionalArea" MinWidth="450" Margin="2"/>
-                        </StackPanel>
-                        <Rectangle Grid.Row="1" Height="2" Fill="LightGray" />
-                        <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"
-                               Text="Coming Soon!" Background="Yellow">
-                            <TextBlock.LayoutTransform>
-                                <RotateTransform Angle="320" />
-                            </TextBlock.LayoutTransform>
-                        </TextBlock>
-                        <ScrollViewer Visibility="Collapsed" Grid.Row="2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-                            <graph:GraphLayout x:Name="_gitGraph" Graph="{Binding GitGraph}" Margin="25">
-                                <graph:GraphLayout.Resources>
-                                    <DataTemplate DataType="{x:Type helpers:GitRelease}">
-                                        <StackPanel MaxWidth="100" Orientation="Vertical">
-                                            <Image Source="images\release.png" Width="60" Height="60" />
-                                            <TextBlock Text="{Binding Name}" FontWeight="ExtraBold" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type helpers:GitSprint}">
-                                        <StackPanel MaxWidth="100" Orientation="Vertical">
-                                            <Image Source="images\sprint.png" Width="40" Height="40" />
-                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type helpers:GitFeature}">
-                                        <StackPanel MaxWidth="100" Orientation="Vertical">
-                                            <Image Source="images\feature.png" Width="20" Height="20" />
-                                            <TextBlock Text="{Binding Name}" FontWeight="Normal" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type helpers:GitFeatureSprint}">
-                                        <StackPanel MaxWidth="100" Orientation="Vertical">
-                                            <Ellipse Width="10" Height="10" Fill="DarkGray"/>
-                                            <TextBlock Text="{Binding Name}" FontWeight="Normal" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type helpers:GitDCR}">
-                                        <StackPanel MaxWidth="100" Orientation="Vertical">
-                                            <Image Source="images\dcr.png" Width="30" Height="30" />
-                                            <TextBlock Text="{Binding Name}" FontStyle="Italic" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </graph:GraphLayout.Resources>
-                            </graph:GraphLayout>
-                        </ScrollViewer>
-                    </Grid>
-                </TabItem>
                 <TabItem>
                     <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="15 1">
                             <Image Source="images/sprint.jpg" Height="25" />
                             <TextBlock Text="Sprint Plan" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
                         </StackPanel>
@@ -606,14 +415,51 @@
                         </DataGrid>
                     </Grid>
                 </TabItem>
-                <!--<TabItem>
+                <TabItem>
                     <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="15 1">
                             <Image Source="images/statistics.png" Height="25" />
-                            <TextBlock Text="PI Status &amp; Statistics" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                            <TextBlock Text="PI Statistics" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0"/>
                         </StackPanel>
                     </TabItem.Header>
-                </TabItem>-->
+                    <Grid ShowGridLines="True" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <lvc:CartesianChart Grid.Row="0" Grid.Column="0" Margin="10 0 10 0" LegendLocation="Bottom"
+                                            Series="{Binding PIStatistics.Burndown}"
+                                            AxisX="{Binding PIStatistics.BurndownXAxis}"
+                                            AxisY="{Binding PIStatistics.BurndownYAxis}" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Burndown" Foreground="Gray" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18"/>
+                        
+                        <lvc:PieChart Grid.Row="0" Grid.Column="1" Margin="10" LegendLocation="Bottom" 
+                                            Series="{Binding PIStatistics.DCRStates}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="DCR States" Foreground="Gray" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18"/>
+
+                        <lvc:CartesianChart Grid.Row="1" Grid.Column="0" Margin="10 0 10 0" LegendLocation="Bottom"
+                                            Series="{Binding PIStatistics.SprintDistribution}"
+                                            AxisX="{Binding PIStatistics.SprintXAxis}"
+                                            AxisY="{Binding PIStatistics.SprintYAxis}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Sprint Content" Foreground="Gray" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18" Margin="0 10 0 0"/>
+                        
+                        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Margin="10 10 10 0" LegendLocation="Bottom"                                             
+                                            Series="{Binding PIStatistics.TeamCarryForwards}"
+                                            AxisX="{Binding PIStatistics.TeamNames}"
+                                            AxisY="{Binding PIStatistics.TeamYAxis}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Team Content" Foreground="Gray" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18" Margin="0 10 0 0"/>
+                        
+                    </Grid>
+                </TabItem>
             </TabControl>
         </Grid>
     </DockPanel>

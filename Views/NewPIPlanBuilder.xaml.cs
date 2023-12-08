@@ -105,6 +105,18 @@ namespace PIPlanner.Views
                 _excelDataImportSection.Visibility = Visibility.Visible;
                 ViewModel.ImportContentFromExcel(dlg.FileName);
             }
-        }        
+        }
+
+        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        {
+            var guid = Guid.NewGuid().ToString("D");
+            e.NewItem = new ChangeRequest
+            {
+                Id = guid.Substring(0, guid.IndexOf('-')),
+                Project = string.Empty,
+                Release = string.Empty,
+                FunctionalArea = string.Empty,
+            };
+        }
     }
 }

@@ -155,19 +155,14 @@
                         </StackPanel>
                     </GroupBox>
                     <DataGrid Grid.Row="2" Margin="20" ItemsSource="{Binding Plan.ChangeRequests}"
-                              AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True">
+                              AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
+                              AddingNewItem="DataGrid_AddingNewItem">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
-                            <DataGridTemplateColumn Header="Summary" Width="*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Summary}" TextWrapping="Wrap" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Release" Binding="{Binding Release}" />
+                            <DataGridTextColumn Header="Summary" Binding="{Binding Summary}" Width="4*" />
+                            <DataGridTextColumn Header="Release" Binding="{Binding Release}"  Width="*" />
                             <DataGridTextColumn Header="Story Points" Binding="{Binding SPs}" />
-                            <DataGridTextColumn Header="Functional Area" Binding="{Binding FunctionalArea}" />
+                            <DataGridTextColumn Header="Functional Area" Binding="{Binding FunctionalArea}" Width="2*" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

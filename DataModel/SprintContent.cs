@@ -56,8 +56,8 @@ namespace PIPlanner.DataModel
             set => SetProperty(ref _remainingSPs, value);
         }
 
-        private string _planningComments;
-        public string PlanningComments
+        private string? _planningComments;
+        public string? PlanningComments
         {
             get => _planningComments;
             set => SetProperty(ref _planningComments, value);

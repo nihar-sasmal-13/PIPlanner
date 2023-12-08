@@ -39,23 +39,23 @@ namespace PIPlanner.DataModel
         
         public Team? Team { get; set; }
 
-        private string _project;
-        public string Project
+        private string? _project;
+        public string? Project
         {
             get => _project;
             set => SetProperty(ref _project, value);
         }
 
-        private string _release;
-        public string Release
+        private string? _release;
+        public string? Release
         {
             get => _release;
             set => SetProperty(ref _release, value);
         }
 
 
-        protected string _summary;
-        public string Summary
+        protected string? _summary;
+        public string? Summary
         {
             get => _summary;
             set => SetProperty(ref _summary, value);
@@ -68,8 +68,8 @@ namespace PIPlanner.DataModel
             set => SetProperty(ref _sps, value);
         }
 
-        private string _functionalArea;
-        public string FunctionalArea
+        private string? _functionalArea;
+        public string? FunctionalArea
         {
             get => _functionalArea;
             set => SetProperty(ref _functionalArea, value);

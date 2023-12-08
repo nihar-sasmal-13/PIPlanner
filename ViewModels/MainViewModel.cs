@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using PIPlanner.DataModel;
 using PIPlanner.Helpers;
+using PIPlanner.Helpers.Exporters;
 using PIPlanner.Plugins;
 using PIPlanner.Views;
 using System;
@@ -12,6 +13,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -105,6 +107,13 @@ namespace PIPlanner.ViewModels
             private set => SetProperty(ref _scrum, value);
         }
 
+        private PIStatisticsViewModel _piStatistics;
+        public PIStatisticsViewModel PIStatistics
+        {
+            get => _piStatistics;
+            private set => SetProperty(ref _piStatistics, value);
+        }
+
         public ICommand NewPlanCommand { get; private set; }
         public ICommand LoadCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
@@ -113,6 +122,8 @@ namespace PIPlanner.ViewModels
         public ICommand ImportPlanCommand { get; private set; }
         public ICommand FilterChangedCommand { get; private set; }
         public ICommand RefreshPlanCommand { get; private set; }
+        public ICommand Export2HTMLCommand { get; private set; }
+        public ICommand Export2CSVCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -124,6 +135,8 @@ namespace PIPlanner.ViewModels
             ImportPlanCommand = new Command(param => importPlan());
             FilterChangedCommand = new Command((param) => filterChangedAsync(param), true);
             RefreshPlanCommand = new Command(async (param) => await refreshPlanAsync(param));
+            Export2HTMLCommand = new Command(param => exportPlan(ExportTypes.HTML), true);
+            Export2CSVCommand = new Command(param => exportPlan(ExportTypes.CSV), true);
 
             ChangeTracker.Initialize(() => RefreshPlanCommand.Execute(null));
         }
@@ -142,7 +155,9 @@ namespace PIPlanner.ViewModels
         {
             Plan = new PlanViewModel(filePath);
             Scrum = new ScrumViewModel(Plan);
+            PIStatistics = new PIStatisticsViewModel { Plan = Plan };
             OnPropertyChanged(nameof(FilteredChangeRequests));
+            OnPropertyChanged(nameof(FunctionalAreas));
         }
 
         private async Task savePlanAsync()
@@ -186,11 +201,15 @@ namespace PIPlanner.ViewModels
                 };
             }
 
-            builder.ShowDialog();
-            Scrum = new ScrumViewModel(Plan);
-            OnPropertyChanged(nameof(Plan));
-            OnPropertyChanged(nameof(FilteredChangeRequests));
-            OnPropertyChanged(nameof(FunctionalAreas));
+            if (builder != null)
+            {
+                builder.ShowDialog();
+                Scrum = new ScrumViewModel(Plan);
+                PIStatistics = new PIStatisticsViewModel { Plan = Plan };
+                OnPropertyChanged(nameof(Plan));
+                OnPropertyChanged(nameof(FilteredChangeRequests));
+                OnPropertyChanged(nameof(FunctionalAreas));
+            }
         }
 
         private void editPlanContent()
@@ -207,6 +226,7 @@ namespace PIPlanner.ViewModels
             };
             builder.ShowDialog();
             Scrum = new ScrumViewModel(Plan);
+            PIStatistics = new PIStatisticsViewModel { Plan = Plan };
             OnPropertyChanged(nameof(FilteredChangeRequests));
         }
 
@@ -259,6 +279,33 @@ namespace PIPlanner.ViewModels
             }
         }
 
+        private void exportPlan(ExportTypes exportType)
+        {
+            if (Plan.HasUnsavedChanges)
+            {
+                var result = MessageBox.Show("There are unsaved changes to the plan. " +
+                    Environment.NewLine +
+                    "Click 'Yes' to save the plan before exporting. " +
+                    Environment.NewLine +
+                    "Click 'No' to continue exporting without saving.",
+                    "Unsaved Changes in Plan",
+                    MessageBoxButton.YesNoCancel);
+
+                if (result == MessageBoxResult.Cancel)
+                    return;
+                else if (result == MessageBoxResult.Yes)
+                    Plan.Save();
+            }
+
+            var fileExtn = ExporterFactory.GetExtensionForExportType(exportType);
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.DefaultExt = fileExtn.Item1;
+            dlg.Filter = fileExtn.Item2;
+            dlg.FileName = Plan.PlanMetadata.Name;
+            if (dlg.ShowDialog().GetValueOrDefault())
+                ExporterFactory.GetExporter(exportType).Export(Plan, dlg.FileName);
+        }
+
         private async Task refreshPlanAsync(object param)
         {
             Plan.NotifyPlanChanged();
@@ -279,21 +326,33 @@ namespace PIPlanner.ViewModels
             FilteredChangeRequests.Refresh();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>true if the item is supposed to be visible</returns>
         private bool filterCRs(object item)
         {
             var cr = item as ChangeRequest;
+            if (cr == null) 
+                return true;
+
             if (ShowFeaturesOnly && !cr.IsFeature)
                 return false;
             if (ShowCRsOnly && cr.IsFeature)
                 return false;
             if (!string.IsNullOrEmpty(SelectedFeatureFilter))
             {
+                if (string.IsNullOrEmpty(cr.FunctionalArea))
+                    return true;
                 if (!cr.FunctionalArea.Contains(SelectedFeatureFilter))
                     return false;
             }
             if (!string.IsNullOrEmpty(_filter))
             {
                 if (cr.Id.ToString().Contains(_filter))
+                    return true;
+                else if (string.IsNullOrEmpty(cr.Summary))
                     return true;
                 else if (cr.Summary.IndexOf(_filter, StringComparison.OrdinalIgnoreCase) >= 0)
                     return true;
