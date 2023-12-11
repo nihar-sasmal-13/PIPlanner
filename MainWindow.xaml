@@ -12,7 +12,7 @@
         xmlns:graph="clr-namespace:Graphviz4Net.WPF;assembly=Graphviz4Net.WPF"        
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        Title="Program Increment Planner" Height="450" Width="800"
+        Title="Program Increment Planner" Height="450" Width="800" 
         Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding LoadCommand}" />
