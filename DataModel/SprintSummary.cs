@@ -51,6 +51,13 @@ namespace PIPlanner.DataModel
             set => SetProperty(ref _defectEffort, value, () => OnPropertyChanged("Properties"));
         }
 
+        private int _otherEffort;
+        public int OtherEffort
+        {
+            get => _otherEffort;
+            set => SetProperty(ref _otherEffort, value, () => OnPropertyChanged("Properties"));
+        }
+
         private int _carryForwardEffort;
         public int CarryForwardEffort
         {
@@ -65,23 +72,26 @@ namespace PIPlanner.DataModel
             set =>SetProperty(ref _newContentEffort, value, () => OnPropertyChanged("Properties"));
         }
 
-        private int _remainingEffort;
-        public int RemainingEffort
-        {
-            get => _remainingEffort;
-            set => SetProperty(ref _remainingEffort, value, () => OnPropertyChanged("Properties"));
-        }
+        //private int _remainingEffort;
+        //public int RemainingEffort
+        //{
+        //    get => _remainingEffort;
+        //    set => SetProperty(ref _remainingEffort, value, () => OnPropertyChanged("Properties"));
+        //}
 
         public ObservableDictionary<string, Tuple<int, int>> Properties
         {
             get
             {
+                int remainingEffort = TotalAvailableEffort - DefectEffort - OtherEffort - NewContentEffort - CarryForwardEffort;
+
                 var properties = new ObservableDictionary<string, Tuple<int, int>>();
                 properties.Add("Total Available Effort", new Tuple<int, int>(TotalAvailableEffort, 100));
                 properties.Add("Defect Effort", new Tuple<int, int>(DefectEffort, DefectEffort * 100 / TotalAvailableEffort));
+                properties.Add("Other Effort", new Tuple<int, int>(OtherEffort, OtherEffort * 100 / TotalAvailableEffort));
                 properties.Add("Carry Forward Effort", new Tuple<int, int>(CarryForwardEffort, CarryForwardEffort * 100 / TotalAvailableEffort));
                 properties.Add("New Content Effort", new Tuple<int, int>(NewContentEffort, NewContentEffort * 100 / TotalAvailableEffort));
-                properties.Add("Remaining Effort", new Tuple<int, int>(RemainingEffort, RemainingEffort * 100 / TotalAvailableEffort));
+                properties.Add("Remaining Effort", new Tuple<int, int>(remainingEffort, remainingEffort * 100 / TotalAvailableEffort));
                 return properties;
             }
         }

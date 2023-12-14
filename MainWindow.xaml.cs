@@ -250,7 +250,9 @@ namespace PIPlanner
                     var crs = ViewModel.Plan.ChangeRequests.Where(cr => cr.SprintId == null && cr.TeamId == sprintView.TeamId);
                     sprintView.EnsureItemValidity(crs, _showItemDetails.IsChecked.GetValueOrDefault());
                 }
-            }            
+            }
+
+            ViewModel.Scrum?.Update();
         }
 
         private void fit2WindowButton_Click(object sender, RoutedEventArgs e)

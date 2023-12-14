@@ -1,10 +1,5 @@
 ﻿using PIPlanner.Helpers;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PIPlanner.DataModel
 {
@@ -47,6 +42,13 @@ namespace PIPlanner.DataModel
             set => SetProperty(ref _sprintAvailability, value, () => OnPropertyChanged("RemainingEffort"));
         }
 
+        private int _assigned;
+        public int Assigned
+        {
+            get => _assigned;
+            set => SetProperty(ref _assigned, value, () => OnPropertyChanged("RemainingEffort"));
+        }
+
         private int _defectBandwidth;
         public int DefectBandwidth
         {
@@ -54,10 +56,17 @@ namespace PIPlanner.DataModel
             set => SetProperty(ref _defectBandwidth, value, () => OnPropertyChanged("RemainingEffort"));
         }
 
+        private int _miscBandwidth;
+        public int MiscBandwidth
+        {
+            get => _miscBandwidth;
+            set => SetProperty(ref _miscBandwidth, value, () => OnPropertyChanged("RemainingEffort"));
+        }
+
         [NotMapped]        
         public int RemainingEffort
         {
-            get => SprintAvailability - DefectBandwidth;
+            get => SprintAvailability - Assigned - DefectBandwidth - MiscBandwidth;
         }
 
         public Sprint Sprint { get; set; }

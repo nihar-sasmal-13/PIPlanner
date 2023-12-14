@@ -86,18 +86,18 @@ namespace PIPlanner.ViewModels
             set => SetProperty(ref _selectedFeatureFilter, value, () => FilteredChangeRequests.Refresh());
         }
 
-        private double _gridWidth;
+        private double _gridWidth = 10;
         public double GridWidth
         {
             get => _gridWidth;
-            set => SetProperty(ref _gridWidth, value);
+            set => SetProperty(ref _gridWidth, double.IsInfinity(value) ? 10 : value);
         }
 
-        private double _gridHeight;
+        private double _gridHeight = 10;
         public double GridHeight
         {
             get => _gridHeight;
-            set => SetProperty(ref _gridHeight, value);
+            set => SetProperty(ref _gridHeight, double.IsInfinity(value) ? 10 : value);
         }
 
         private ScrumViewModel _scrum;
