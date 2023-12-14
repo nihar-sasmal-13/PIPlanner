@@ -1,4 +1,5 @@
-﻿using PIPlanner.ViewModels;
+﻿using PIPlanner.DataModel;
+using PIPlanner.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace PIPlanner.Helpers.Exporters
     interface IExporter
     {
         void Export(PlanViewModel plan, string outFilePath);
+        void Export(ScrumViewModel scrum, string outFilePath);
     }
 
     enum ExportTypes

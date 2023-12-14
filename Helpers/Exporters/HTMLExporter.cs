@@ -1,4 +1,5 @@
-﻿using PIPlanner.ViewModels;
+﻿using PIPlanner.DataModel;
+using PIPlanner.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,6 +75,11 @@ table {
                 writer.WriteLine("</table><br/><br/><br/><br/><br/>");
                 writer.WriteLine("</body></html>");
             }
+        }
+
+        public void Export(ScrumViewModel scrum, string outFilePath)
+        {
+
         }
     }
 }

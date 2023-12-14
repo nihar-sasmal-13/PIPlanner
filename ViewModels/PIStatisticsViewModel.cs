@@ -124,29 +124,35 @@ namespace PIPlanner.ViewModels
                 {
                     Title = "Total Available Effort",
                     Values = new ChartValues<int>(Plan.Sprints.Select(sp => sp.SprintSummary.TotalAvailableEffort)),
-                    DataLabels = true,
-                    Foreground = Brushes.LightGreen
+                    DataLabels = true,                    
                 },
-                new LineSeries
+                new StackedAreaSeries
                 {
                     Title = "New Content Effort",
                     Values = new ChartValues<int>(Plan.Sprints.Select(sp => sp.SprintSummary.NewContentEffort)),
                     DataLabels = true,
-                    Foreground = Brushes.LightBlue
+                    Fill = Brushes.LightGreen
                 },
-                new LineSeries
+                new StackedAreaSeries
                 {
                     Title = "Defect Effort",
                     Values = new ChartValues<int>(Plan.Sprints.Select(sp => sp.SprintSummary.DefectEffort)),
                     DataLabels = true,
-                    Foreground = Brushes.LightYellow
+                    Fill = Brushes.OrangeRed
                 },
-                new LineSeries
+                new StackedAreaSeries
+                {
+                    Title = "Other Effort",
+                    Values = new ChartValues<int>(Plan.Sprints.Select(sp => sp.SprintSummary.OtherEffort)),
+                    DataLabels = true,
+                    Fill = Brushes.LightGray
+                },
+                new StackedAreaSeries
                 {
                     Title = "CarryForward Effort",
                     Values = new ChartValues<int>(Plan.Sprints.Select(sp => sp.SprintSummary.CarryForwardEffort)),
                     DataLabels = true,
-                    Foreground = Brushes.Pink
+                    Fill = Brushes.Pink
                 },
             };
 

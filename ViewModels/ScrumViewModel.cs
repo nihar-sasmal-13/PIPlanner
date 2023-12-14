@@ -1,8 +1,10 @@
 ﻿using PIPlanner.DataModel;
 using PIPlanner.Helpers;
+using PIPlanner.Helpers.Exporters;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace PIPlanner.ViewModels
 {
@@ -140,7 +142,7 @@ namespace PIPlanner.ViewModels
                 .Sum(st => st.DefectBandwidth);
             int newContentEffort = _plan.SprintContents
                 .Where(sc => sc.SprintId == sprint.Id)
-                .Where(cr => cr.State == ContentState.Planned || cr.State == ContentState.Opportunity)
+                .Where(cr => cr.State != ContentState.Dropped)
                 .Sum(cr => cr.ChangeRequest.SPs);
             int otherEffort = _plan.SprintTeams
                 .Where(st => st.SprintId == sprint.Id)

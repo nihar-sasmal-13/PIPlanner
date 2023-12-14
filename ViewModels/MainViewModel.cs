@@ -124,6 +124,7 @@ namespace PIPlanner.ViewModels
         public ICommand RefreshPlanCommand { get; private set; }
         public ICommand Export2HTMLCommand { get; private set; }
         public ICommand Export2CSVCommand { get; private set; }
+        public ICommand ExportSprint2CSVCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -137,6 +138,7 @@ namespace PIPlanner.ViewModels
             RefreshPlanCommand = new Command(async (param) => await refreshPlanAsync(param));
             Export2HTMLCommand = new Command(param => exportPlan(ExportTypes.HTML), true);
             Export2CSVCommand = new Command(param => exportPlan(ExportTypes.CSV), true);
+            ExportSprint2CSVCommand = new Command(param => exportSprint(ExportTypes.CSV), true);
 
             ChangeTracker.Initialize(() => RefreshPlanCommand.Execute(null));
         }
@@ -279,7 +281,7 @@ namespace PIPlanner.ViewModels
             }
         }
 
-        private void exportPlan(ExportTypes exportType)
+        private void promptAndSavePlan()
         {
             if (Plan.HasUnsavedChanges)
             {
@@ -296,6 +298,11 @@ namespace PIPlanner.ViewModels
                 else if (result == MessageBoxResult.Yes)
                     Plan.Save();
             }
+        }
+
+        private void exportPlan(ExportTypes exportType)
+        {
+            promptAndSavePlan();
 
             var fileExtn = ExporterFactory.GetExtensionForExportType(exportType);
             SaveFileDialog dlg = new SaveFileDialog();
@@ -304,6 +311,19 @@ namespace PIPlanner.ViewModels
             dlg.FileName = Plan.PlanMetadata.Name;
             if (dlg.ShowDialog().GetValueOrDefault())
                 ExporterFactory.GetExporter(exportType).Export(Plan, dlg.FileName);
+        }
+
+        private void exportSprint(ExportTypes exportType)
+        {
+            promptAndSavePlan();
+
+            var fileExtn = ExporterFactory.GetExtensionForExportType(exportType);
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.DefaultExt = fileExtn.Item1;
+            dlg.Filter = fileExtn.Item2;
+            dlg.FileName = $"{Plan.PlanMetadata.Name}_{Scrum.SelectedSprint.Name}";
+            if (dlg.ShowDialog().GetValueOrDefault())
+                ExporterFactory.GetExporter(exportType).Export(Scrum, dlg.FileName);
         }
 
         private async Task refreshPlanAsync(object param)
