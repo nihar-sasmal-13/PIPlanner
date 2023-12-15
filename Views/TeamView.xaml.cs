@@ -99,7 +99,7 @@ namespace PIPlanner.Views
             if (DataContext == null || string.IsNullOrEmpty(newValue) || !int.TryParse(newValue, out teamSize))
                 return;
 
-            if (teamSize <= 0) 
+            if (teamSize < 0) 
                 return;
 
             //remove all the team members for THIS team
