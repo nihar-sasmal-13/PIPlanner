@@ -166,6 +166,8 @@ namespace PIPlanner.ViewModels
         {
             Plan.PlanMetadata.LastModifiedAt = DateTime.Now;
             Plan.Save();
+            Scrum?.Update();
+            PIStatistics?.RefreshStats();
         }
 
         private void createOrEditPlan()
@@ -329,6 +331,8 @@ namespace PIPlanner.ViewModels
         private async Task refreshPlanAsync(object param)
         {
             Plan.NotifyPlanChanged();
+            //Scrum?.Update();
+            //PIStatistics?.RefreshStats();
         }
 
         private string getTargetFilePath()

@@ -6,10 +6,11 @@ namespace PIPlanner.DataModel
 {
     internal enum SprintStatus
     {
-        PlannedOrInProgress = 0,
-        CompletedAsPlanned = 1,
-        PartiallySucceeded = 2,
-        CompleteFailure = 3
+        Planned = 0,
+        InProgress = 1,
+        CompletedAsPlanned = 2,
+        PartiallySucceeded = 3,
+        CompleteFailure = 4
     }
 
     internal class SprintSummary : PropertyNotifier

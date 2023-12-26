@@ -1,10 +1,8 @@
 ﻿using PIPlanner.DataModel;
 using PIPlanner.Helpers;
-using PIPlanner.Helpers.Exporters;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace PIPlanner.ViewModels
 {
@@ -93,6 +91,16 @@ namespace PIPlanner.ViewModels
         {
             foreach (var sprint in _plan.Sprints)
             {
+                var sprintStatus = getSprintStatus(sprint);
+                if (sprintStatus == SprintStatus.Planned)
+                {
+                    //if the sprint is in planning state, clear all the existing content and recreate the content
+                    _plan.SprintContents
+                        .Where(sc => sc.SprintId == sprint.Id)
+                        .ToList()
+                        .ForEach(sc => _plan.SprintContents.Remove(sc));
+                }
+
                 var newContent = _plan.ChangeRequests
                     .Where(cr => (cr.SprintId == sprint.Id) && !_plan.SprintContents.Any(c => c.DCRId == cr.Id))
                     .Select(cr => new SprintContent
@@ -165,9 +173,12 @@ namespace PIPlanner.ViewModels
         private SprintStatus getSprintStatus(Sprint sprint)
         {
             if (sprint == null)
-                return SprintStatus.PlannedOrInProgress;
-            if (sprint.EndDate > DateTime.Today)
-                return SprintStatus.PlannedOrInProgress;
+                return SprintStatus.Planned;
+            
+            if (sprint.StartDate > DateTime.Today)
+                return SprintStatus.Planned;
+            else if ((sprint.StartDate <= DateTime.Today) && (sprint.EndDate >= DateTime.Today))
+                return SprintStatus.InProgress;
             else
             {
                 var sprintContent = _plan.SprintContents.Where(sc => sc.SprintId == sprint.Id);
@@ -180,7 +191,7 @@ namespace PIPlanner.ViewModels
                 else if (sprintContent.Any(sc => sc.State == ContentState.Completed))
                     return SprintStatus.PartiallySucceeded;
             }
-            return SprintStatus.PlannedOrInProgress;
+            return SprintStatus.Planned;
         }
     }
 }

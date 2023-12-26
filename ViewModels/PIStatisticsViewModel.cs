@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace PIPlanner.ViewModels
@@ -110,10 +111,13 @@ namespace PIPlanner.ViewModels
 
         public void RefreshStats()
         {
-            createBurndown();
-            createSprintDistribution();
-            createDCRStateDistribution();
-            createCarryForwards();            
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                createBurndown();
+                createSprintDistribution();
+                createDCRStateDistribution();
+                createCarryForwards();
+            });
         }
 
         private void createSprintDistribution()

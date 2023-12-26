@@ -18,7 +18,12 @@ namespace PIPlanner.Converters
             Brush brush = Brushes.Transparent;
             switch(status)
             {
-                case SprintStatus.PlannedOrInProgress:
+                case SprintStatus.Planned:
+                    {
+                        brush = Brushes.LightCyan;
+                        break;
+                    }
+                case SprintStatus.InProgress:
                     {
                         brush = Brushes.LightBlue;
                         break;
