@@ -1,5 +1,7 @@
 # PIPlanner
 
+[![.NET Core Desktop](https://github.com/nihar-sasmal-13/PIPlanner/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/nihar-sasmal-13/PIPlanner/actions/workflows/dotnet-desktop.yml)
+
 ## Introduction
 Program Increment Planner i.e. PIPlanner, is a dedicated desktop application designed to streamline and enhance the process of creating a comprehensive program increment (PI) plan for the upcoming quarter.
 
