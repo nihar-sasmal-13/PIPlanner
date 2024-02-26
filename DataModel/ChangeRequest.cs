@@ -10,14 +10,22 @@ using System.Windows.Media;
 
 namespace PIPlanner.DataModel
 {
+    [PrimaryKey(nameof(DBId))]
     internal class ChangeRequest : PropertyNotifier
     {
+        private string _dbId;        
+        public string DBId
+        {
+            get => _dbId;
+            set => SetProperty(ref _dbId, value);
+        }
+
         private string _id;        
         public string Id
         {
             get => _id;
             set => SetProperty(ref _id, value);
-        }
+        }    
 
         private int? _sprintId;
         [ForeignKey(nameof(SprintId))]

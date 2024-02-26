@@ -43,6 +43,7 @@ namespace PIPlanner.Plugins
                 var crs = executeQuery(crFields, query, connection);
                 ChangeRequests = crs.Select(cr => new ChangeRequest
                 {
+                    DBId = cr[0],
                     Id = cr[0],
                     Summary = cr[1],
                     Project = cr[2],

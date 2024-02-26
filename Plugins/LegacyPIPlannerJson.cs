@@ -49,6 +49,7 @@ namespace PIPlanner.Plugins
                     string summary = cr.Summary;
                     ChangeRequests.Add(new ChangeRequest
                     {
+                        DBId = cr.ID,
                         Id = cr.ID,
                         Project = project ?? "Unknown",
                         Release = release ?? "Unknown",

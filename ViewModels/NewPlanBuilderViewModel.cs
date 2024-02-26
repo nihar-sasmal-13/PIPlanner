@@ -166,19 +166,24 @@ namespace PIPlanner.ViewModels
 
         public void UpdateSprintTeams()
         {
-            Plan.SprintTeams.Clear();
+            //Plan.SprintTeams.Clear();
             foreach (var sprint in Plan.Sprints)
             {
                 foreach (var team in Plan.Teams)
                 {
-                    Plan.SprintTeams.Add(new SprintTeam
+                    var sprintTeamId = sprint.Id * 100 + team.Id;
+                    var existingSprintTeam = Plan.SprintTeams.FirstOrDefault(st => st.Id == sprintTeamId);
+                    if (existingSprintTeam == null)
                     {
-                        Id = sprint.Id * 100 + team.Id,
-                        SprintId = sprint.Id,
-                        TeamId = team.Id,
-                        PIAvailability = team.Velocity,
-                        SprintAvailability = team.Velocity,
-                    });
+                        Plan.SprintTeams.Add(new SprintTeam
+                        {
+                            Id = sprintTeamId,
+                            SprintId = sprint.Id,
+                            TeamId = team.Id,
+                            PIAvailability = team.Velocity,
+                            SprintAvailability = team.Velocity,
+                        });
+                    }                    
                 }
             }
         }
@@ -283,6 +288,7 @@ namespace PIPlanner.ViewModels
                         string fa = SelectedTable.Rows[index].GetData(FunctionalFieldName, true, ",");
                         ChangeRequest cr = new ChangeRequest
                         {
+                            DBId = crId,
                             Id = crId,
                             Summary = summary,
                             Project = project,

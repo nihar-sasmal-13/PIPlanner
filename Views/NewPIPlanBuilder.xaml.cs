@@ -110,9 +110,11 @@ namespace PIPlanner.Views
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
             var guid = Guid.NewGuid().ToString("D");
+            var id = guid.Substring(0, guid.IndexOf('-'));
             e.NewItem = new ChangeRequest
             {
-                Id = guid.Substring(0, guid.IndexOf('-')),
+                DBId = id,
+                Id = id,
                 Project = string.Empty,
                 Release = string.Empty,
                 FunctionalArea = string.Empty,
